@@ -1,6 +1,7 @@
 <!--  -->
 <template>
-  <div class="search-bar">
+<div>
+    <div class="search-bar">
       <van-row>
           <van-col span="3">
               <img :src="locationIcon" width="80%" class="location-icon" />
@@ -13,22 +14,47 @@
           </van-col>
       </van-row>
   </div>
+  <!--swiper area-->
+  <div class="swiper-area">
+      <van-swipe :autoplay='swiperAutoplay'>
+          <van-swipe-item v-for="(banner, i) in bannerPicArray" :key="i">
+              <img :src="banner.imageUrl" width="100%" />
+          </van-swipe-item>
+      </van-swipe>
+  </div>
+</div>
+  
 </template>
 
 <script>
 export default {
   props: [],
 
-  data () {
+  data() {
     return {
-        msg: 'Hello',
-        locationIcon: require('../../assets/logo.png')
+      msg: "Hello",
+      locationIcon: require("../../assets/images/location.png"),
+      bannerPicArray: [
+        {
+          imageUrl:
+            "http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic001.jpg"
+        },
+        {
+          imageUrl:
+            "http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic002.jpg"
+        },
+        {
+          imageUrl:
+            "http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic003.jpg"
+        }
+      ],
+      swiperAutoplay: 2000,
     };
   },
 
-  created(){},
+  created() {},
 
-  mounted(){},
+  mounted() {},
 
   watch: {},
 
@@ -37,24 +63,29 @@ export default {
   methods: {},
 
   components: {}
-}
-
+};
 </script>
-<style scoped>
-    .search-bar{
-        height: 2.2rem;
-        background-color: #e5017d;
-        line-height: 2.2rem;
-    }
-    .search-input{
-        width: 100%;
-        height: 1.3rem;
-        border: 0 0 1px 0;
-        border-bottom: 1px solid #fff;
-        background-color: #e5017d;
-        color: #fff;
-    }
-    .location-icon{
-        padding: .2rem 0 0 .3rem;
-    }
+<style lang="scss" scoped>
+.search-bar {
+  height: 2.2rem;
+  background-color: #e5017d;
+  line-height: 2.2rem;
+  overflow: hidden;
+  .location-icon {
+    padding: 0.2rem 0 0 0.3rem;
+  }
+  .search-input {
+    width: 100%;
+    height: 1.3rem;
+    border: 0 0 1px 0;
+    border-bottom: 1px solid #fff;
+    background-color: #e5017d;
+    color: #fff;
+  }
+}
+.swiper-area{
+    clear: both;
+    max-height: 15rem;
+    overflow: hidden;
+}
 </style>
