@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   props: [],
 
@@ -52,7 +53,18 @@ export default {
     };
   },
 
-  created() {},
+  created() {
+    axios({
+      url: 'https://www.easy-mock.com/mock/5ae3e0e35d7eee05a132b94e/MallKoa/index',
+      method: 'get'
+    })
+    .then(res => {
+      console.log('res: ', res)
+    })
+    .catch(err => {
+      console.log('err: ', err)
+    })
+  },
 
   mounted() {},
 
