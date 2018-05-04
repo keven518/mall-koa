@@ -1,69 +1,99 @@
 <!--  -->
 <template>
 <div>
-    <div class="search-bar">
-      <van-row>
-          <van-col span="3">
-              <img :src="locationIcon" width="80%" class="location-icon" />
-          </van-col>
-          <van-col span="16">
-              <input type="text" class="search-input">
-          </van-col>
-          <van-col span="5">
-              <van-button size="mini">查找</van-button>
-          </van-col>
-      </van-row>
+  <div class="search-bar">
+    <van-row>
+        <van-col span="3">
+            <img :src="locationIcon" width="80%" class="location-icon" />
+        </van-col>
+        <van-col span="16">
+            <input type="text" class="search-input">
+        </van-col>
+        <van-col span="5">
+            <van-button size="mini">查找</van-button>
+        </van-col>
+    </van-row>
   </div>
   <!--swiper area-->
   <div class="swiper-area">
-      <van-swipe :autoplay='swiperAutoplay'>
-          <van-swipe-item v-for="(banner, i) in bannerPicArray" :key="i">
-              <img :src="banner.imageUrl" width="100%" />
-          </van-swipe-item>
-      </van-swipe>
+    <van-swipe :autoplay='swiperAutoplay'>
+        <van-swipe-item v-for="(banner, i) in bannerPicArray" :key="i">
+            <img v-lazy="banner.image" width="100%" />
+        </van-swipe-item>
+    </van-swipe>
+  </div>
+  <!--type bar-->
+  <div class="type-bar">
+    <div v-for="(item, i) in category" :key="i">
+      <img v-lazy="item.image" width="90%" src="" alt="">
+      <span>{{item.mallCategoryName}}</span>
+    </div>
+  </div>
+  <!--adbanner area-->
+  <div>
+    <img v-lazy="adBanner" width="100%">
+  </div>
+  <!--Recommend goods area-->
+  <div class="recommend-area">
+    <div class="recommend-title">
+      商品推荐
+    </div>
+    <div class="recommend-body">
+      <swiper :options='swiperOption'>
+        <swiper-slide v-for="(item, i) in recommendGoods" :key='item.goodsId'>
+          <div class="recommend-item">
+            <img :src="item.image" width="80%" alt="">
+            <div>{{item.goodsName}}</div>
+            <div>￥{{item.price}}(￥{{item.mallPrice}})</div>
+          </div>
+        </swiper-slide>
+      </swiper>
+    </div>
   </div>
 </div>
   
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
+import "swiper/dist/css/swiper.css";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
 export default {
   props: [],
 
   data() {
     return {
+      swiperOption: {
+        slidesPerView: 3, // swiper有几项
+      },
       msg: "Hello",
       locationIcon: require("../../assets/images/location.png"),
-      bannerPicArray: [
-        {
-          imageUrl:
-            "http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic001.jpg"
-        },
-        {
-          imageUrl:
-            "http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic002.jpg"
-        },
-        {
-          imageUrl:
-            "http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic003.jpg"
-        }
-      ],
+      bannerPicArray: [],
       swiperAutoplay: 2000,
+      category: [],
+      adBanner: "",
+      recommendGoods: []
     };
   },
 
   created() {
     axios({
-      url: 'https://www.easy-mock.com/mock/5ae3e0e35d7eee05a132b94e/MallKoa/index',
-      method: 'get'
+      url:
+        "https://www.easy-mock.com/mock/5ae3e0e35d7eee05a132b94e/MallKoa/index",
+      method: "get"
     })
-    .then(res => {
-      console.log('res: ', res)
-    })
-    .catch(err => {
-      console.log('err: ', err)
-    })
+      .then(res => {
+        console.log("res: ", res);
+        if (res.status == 200) {
+          this.category = res.data.data.category;
+          this.adBanner = res.data.data.advertesPicture.PICTURE_ADDRESS;
+          this.bannerPicArray = res.data.data.slides;
+          this.recommendGoods = res.data.data.recommend;
+        }
+      })
+      .catch(err => {
+        console.log("err: ", err);
+      });
   },
 
   mounted() {},
@@ -74,7 +104,7 @@ export default {
 
   methods: {},
 
-  components: {}
+  components: { swiper, swiperSlide }
 };
 </script>
 <style lang="scss" scoped>
@@ -95,9 +125,42 @@ export default {
     color: #fff;
   }
 }
-.swiper-area{
-    clear: both;
-    max-height: 15rem;
-    overflow: hidden;
+.swiper-area {
+  clear: both;
+  max-height: 15rem;
+  overflow: hidden;
+}
+.type-bar {
+  background-color: #fff;
+  margin: 0 0.3rem 0.3rem 0.3rem;
+  border-radius: 0.3rem;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  div {
+    padding: 0.3rem;
+    font-size: 12px;
+    text-align: center;
+  }
+}
+.recommend-area {
+  background-color: #fff;
+  margin-top: 0.3rem;
+  .recommend-title {
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    padding: 0.2rem;
+    color: #e5017d;
+  }
+  .recommend-body{
+    border-bottom: 1px solid #eee;
+    .recommend-item{
+      width:99%;
+      border-right: 1px solid #eee;
+      font-size: 12px;
+      text-align: center;
+    }
+  }
 }
 </style>
