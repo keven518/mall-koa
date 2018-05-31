@@ -40,7 +40,7 @@
     </div>
     <div class="recommend-body">
       <swiper :options='swiperOption'>
-        <swiper-slide v-for="(item, i) in recommendGoods" :key='item.goodsId'>
+        <swiper-slide v-for="(item, i) in recommendGoods" :key='i'>
           <div class="recommend-item">
             <img :src="item.image" width="80%" alt="">
             <div>{{item.goodsName}}</div>
@@ -50,6 +50,13 @@
       </swiper>
     </div>
   </div>
+
+  <floor-component :floorData="floor1" :floorTitle="floorName.floor1"></floor-component>
+  <floor-component :floorData="floor2" :floorTitle="floorName.floor2"></floor-component>
+  <floor-component :floorData="floor3" :floorTitle="floorName.floor3"></floor-component>
+
+  
+
 </div>
   
 </template>
@@ -58,13 +65,14 @@
 import axios from "axios";
 import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
+import floorComponent from "@/components/component/floorComponent";
 export default {
   props: [],
 
   data() {
     return {
       swiperOption: {
-        slidesPerView: 3, // swiper有几项
+        slidesPerView: 3 // swiper有几项
       },
       msg: "Hello",
       locationIcon: require("../../assets/images/location.png"),
@@ -72,7 +80,11 @@ export default {
       swiperAutoplay: 2000,
       category: [],
       adBanner: "",
-      recommendGoods: []
+      recommendGoods: [],
+      floor1: [],
+      floor2: [],
+      floor3: [],
+      floorName: {}
     };
   },
 
@@ -89,6 +101,10 @@ export default {
           this.adBanner = res.data.data.advertesPicture.PICTURE_ADDRESS;
           this.bannerPicArray = res.data.data.slides;
           this.recommendGoods = res.data.data.recommend;
+          this.floor1 = res.data.data.floor1;
+          this.floor2 = res.data.data.floor2;
+          this.floor3 = res.data.data.floor3;
+          this.floorName = res.data.data.floorName;
         }
       })
       .catch(err => {
@@ -104,7 +120,11 @@ export default {
 
   methods: {},
 
-  components: { swiper, swiperSlide }
+  components: {
+    swiper,
+    swiperSlide,
+    floorComponent
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -153,10 +173,10 @@ export default {
     padding: 0.2rem;
     color: #e5017d;
   }
-  .recommend-body{
+  .recommend-body {
     border-bottom: 1px solid #eee;
-    .recommend-item{
-      width:99%;
+    .recommend-item {
+      width: 99%;
       border-right: 1px solid #eee;
       font-size: 12px;
       text-align: center;
