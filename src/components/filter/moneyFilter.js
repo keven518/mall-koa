@@ -1,3 +1,3 @@
 export function toMoney(money = 0){
-  return newMoney.toFixed(2);
+  return money.toFixed(2);
 }

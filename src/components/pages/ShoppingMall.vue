@@ -54,7 +54,25 @@
   <floor-component :floorData="floor1" :floorTitle="floorName.floor1"></floor-component>
   <floor-component :floorData="floor2" :floorTitle="floorName.floor2"></floor-component>
   <floor-component :floorData="floor3" :floorTitle="floorName.floor3"></floor-component>
-
+ 
+  <!--Hot Area-->
+  <div class="hot-area">
+      <div class="hot-title">热卖商品</div>
+      <div class="hot-goods">
+        <!--这里需要一个list组件-->
+        <van-list>
+          <van-row getter="20">
+            <van-col span="12" v-for="(item, i) in hotGoods" :key="i">
+              <goods-info
+                :goodsImage="item.image"
+                :goodsName="item.name"
+                :goodsPrice="item.price"
+              ></goods-info>
+            </van-col>
+          </van-row>
+        </van-list>
+      </div>
+  </div>
   
 
 </div>
@@ -67,6 +85,8 @@ import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import floorComponent from "@/components/component/floorComponent";
 import { toMoney } from '@/components/filter/moneyFilter.js'
+import goodsInfo from "@/components/component/goodsInfoComponent";
+import url from '@/serviceAPI.config.js'
 export default {
   props: [],
 
@@ -85,7 +105,8 @@ export default {
       floor1: [],
       floor2: [],
       floor3: [],
-      floorName: {}
+      floorName: {},
+      hotGoods: [], // 热卖商品
     };
   },
   filters: {
@@ -95,8 +116,7 @@ export default {
   },
   created() {
     axios({
-      url:
-        "https://www.easy-mock.com/mock/5ae3e0e35d7eee05a132b94e/MallKoa/index",
+      url: url.getShopingMallInfo,
       method: "get"
     })
       .then(res => {
@@ -110,6 +130,7 @@ export default {
           this.floor2 = res.data.data.floor2;
           this.floor3 = res.data.data.floor3;
           this.floorName = res.data.data.floorName;
+          this.hotGoods = res.data.data.hotGoods;
         }
       })
       .catch(err => {
@@ -128,7 +149,8 @@ export default {
   components: {
     swiper,
     swiperSlide,
-    floorComponent
+    floorComponent,
+    goodsInfo
   }
 };
 </script>
@@ -187,5 +209,11 @@ export default {
       text-align: center;
     }
   }
+}
+.hot-area{
+  text-align: center;
+  font-size:14px;
+  height: 1.8rem;
+  line-height:1.8rem;
 }
 </style>
